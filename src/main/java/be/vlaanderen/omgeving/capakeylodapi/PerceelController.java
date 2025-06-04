@@ -1,5 +1,6 @@
 package be.vlaanderen.omgeving.capakeylodapi;
 
+import be.vlaanderen.omgeving.capakeylodapi.configuration.JsonldConfiguration;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -8,6 +9,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,6 +36,8 @@ import java.util.List;
 public class PerceelController {
 
     private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private JsonldConfiguration jsonldConfiguration ;
 
     @GetMapping("/{capakey1}/{capakey2}")
     public ResponseEntity<String> getPerceel(
@@ -83,8 +87,8 @@ public class PerceelController {
             ObjectMapper mapper = new ObjectMapper();
 //            JsonNode
             ObjectNode root = (ObjectNode) mapper.readTree(json);
-
-            ObjectNode context = mapper.createObjectNode();
+            JsonNode context = jsonldConfiguration.getJsonLDContext();
+            /*ObjectNode context = mapper.createObjectNode();
             context.put("geo", "http://www.opengis.net/ont/geosparql#");
             context.put("sf", "http://www.opengis.net/ont/sf#");
             context.put("locn", "http://www.w3.org/ns/locn#");
@@ -130,7 +134,7 @@ public class PerceelController {
             context.set("wkt", mapper.createObjectNode()
                     .put("@id", "geo:asWKT")
                     .put("@type", "geo:wktLiteral"));
-            context.put("type", "@type");
+            context.put("type", "@type");*/
 
             // Geometry in WKT
             ArrayNode coords = (ArrayNode) ((ObjectNode) mapper.readTree(root.get("geometry").get("shape").asText())).get("coordinates").get(0);
@@ -143,17 +147,22 @@ public class PerceelController {
             ObjectNode jsonld = mapper.createObjectNode();
             jsonld.set("@context", context);
             jsonld.put("@id", "https://data.vlaanderen.be/id/perceel/" + fullCapakey);
-            jsonld.put("capakey", fullCapakey);
+            //jsonld.put("capakey", fullCapakey);
             //jsonld.put("municipalityName", root.get("municipalityName").asText());
+            jsonld.put("departmentCode", root.get("departmentCode").asText());
             jsonld.put("departmentName", root.get("departmentName").asText());
             jsonld.put("sectionCode", root.get("sectionCode").asText());
+            jsonld.put("perceelnummer", root.get("perceelnummer").asText());
             jsonld.put("grondnummer", root.get("grondnummer").asText());
             jsonld.put("exponent", root.get("exponent").asText());
+            jsonld.put("macht", root.get("macht").asText());
             jsonld.put("bisnummer", root.get("bisnummer").asText());
             //jsonld.set("adres", root.get("adres"));
 
             ObjectNode geometry = mapper.createObjectNode();
-            geometry.put("type", "sf:Polygon");
+            geometry.put("@id", "https://data.vlaanderen.be/id/geometry/capakey/" + fullCapakey);
+            //geometry.put("type", "sf:Polygon");
+            geometry.put("type", "geo:Geometry");
             geometry.put("wkt", wkt);
             jsonld.set("geometry", geometry);
 
@@ -167,6 +176,12 @@ public class PerceelController {
             locn.put("type", "dct:Location");
             locn.set("municipalityName", root.get("municipalityName"));
             jsonld.set("location", locn);
+
+            ObjectNode ident = mapper.createObjectNode();
+            ident.put("@id", "https://data.vlaanderen.be/id/identifier/capakey/" + fullCapakey);
+            ident.put("type", "adms:Identifier");
+            ident.put("capakey", fullCapakey);
+            jsonld.set("identifier", ident);
 
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonld);
 
