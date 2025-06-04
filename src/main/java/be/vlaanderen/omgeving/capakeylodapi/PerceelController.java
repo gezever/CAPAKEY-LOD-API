@@ -88,55 +88,6 @@ public class PerceelController {
 //            JsonNode
             ObjectNode root = (ObjectNode) mapper.readTree(json);
             JsonNode context = jsonldConfiguration.getJsonLDContext();
-            /*ObjectNode context = mapper.createObjectNode();
-            context.put("geo", "http://www.opengis.net/ont/geosparql#");
-            context.put("sf", "http://www.opengis.net/ont/sf#");
-            context.put("locn", "http://www.w3.org/ns/locn#");
-            context.put("capakey", "https://data.vlaanderen.be/id/perceel/");
-            context.put("perc", "https://data.vlaanderen.be/ns/perceel#");
-            context.put("xs", "http://www.w3.org/2001/XMLSchema#");
-            context.put("dct", "http://purl.org/dc/terms/");
-            context.put("adms", "https://www.w3.org/ns/adms#");
-
-
-            ObjectNode adres = mapper.createObjectNode();
-            adres.put("@id", "locn:address");
-            adres.put("@container", "@set");
-            adres.put("@type", "@id");
-            context.set("adres", adres);
-
-            ObjectNode fullAddress = mapper.createObjectNode();
-            fullAddress.put("@id", "locn:fullAddress");
-            context.set("fullAddress", fullAddress);
-
-
-
-            ObjectNode ident = mapper.createObjectNode();
-            ident.put("@id", "adms:identifier");
-            ident.put("@type", "@id");
-            context.set("identifier", ident);
-
-            ObjectNode location = mapper.createObjectNode();
-            location.put("@id", "locn:location");
-            location.put("@type", "@id");
-            context.set("location", location);
-
-            ObjectNode municipality = mapper.createObjectNode();
-            municipality.put("@id", "locn:geographicName");
-            context.set("municipalityName", municipality);
-
-            ObjectNode pn = mapper.createObjectNode();
-            pn.put("@id", "locn:postName");
-            context.set("postName", pn);
-
-            context.set("geometry", mapper.createObjectNode().put("@id", "geo:hasGeometry"));
-
-            context.set("wkt", mapper.createObjectNode()
-                    .put("@id", "geo:asWKT")
-                    .put("@type", "geo:wktLiteral"));
-            context.put("type", "@type");*/
-
-            // Geometry in WKT
             ArrayNode coords = (ArrayNode) ((ObjectNode) mapper.readTree(root.get("geometry").get("shape").asText())).get("coordinates").get(0);
             List<String> wktCoords = new ArrayList<>();
             for (JsonNode coord : coords) {
@@ -147,8 +98,6 @@ public class PerceelController {
             ObjectNode jsonld = mapper.createObjectNode();
             jsonld.set("@context", context);
             jsonld.put("@id", "https://data.vlaanderen.be/id/perceel/" + fullCapakey);
-            //jsonld.put("capakey", fullCapakey);
-            //jsonld.put("municipalityName", root.get("municipalityName").asText());
             jsonld.put("departmentCode", root.get("departmentCode").asText());
             jsonld.put("departmentName", root.get("departmentName").asText());
             jsonld.put("sectionCode", root.get("sectionCode").asText());
@@ -157,7 +106,6 @@ public class PerceelController {
             jsonld.put("exponent", root.get("exponent").asText());
             jsonld.put("macht", root.get("macht").asText());
             jsonld.put("bisnummer", root.get("bisnummer").asText());
-            //jsonld.set("adres", root.get("adres"));
 
             ObjectNode geometry = mapper.createObjectNode();
             geometry.put("@id", "https://data.vlaanderen.be/id/geometry/capakey/" + fullCapakey);
