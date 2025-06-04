@@ -1,4 +1,34 @@
-package be.vlaanderen.omgeving.capakeylodapi ;
+package be.vlaanderen.omgeving.capakeylodapi;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFParser;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/id/perceel")
 public class PerceelController {
@@ -49,7 +79,9 @@ public class PerceelController {
         // Deze methode verwerkt de JSON en maakt een JSON-LD string zoals in jouw voorbeeld.
         // In een productie-omgeving zou je dit netjes modelleren. Voor nu volstaat een snelle parse & build.
         try {
+
             ObjectMapper mapper = new ObjectMapper();
+//            JsonNode
             ObjectNode root = (ObjectNode) mapper.readTree(json);
 
             ObjectNode context = mapper.createObjectNode();
@@ -94,7 +126,8 @@ public class PerceelController {
 
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonld);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to transform JSON to JSON-LD", e);
         }
     }
@@ -103,7 +136,8 @@ public class PerceelController {
         Model model = ModelFactory.createDefaultModel();
         try (InputStream is = new ByteArrayInputStream(jsonld.getBytes(StandardCharsets.UTF_8))) {
             RDFParser.source(is).lang(Lang.JSONLD).parse(model);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to parse JSON-LD to RDF", e);
         }
 
