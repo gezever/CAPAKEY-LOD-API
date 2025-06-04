@@ -1,0 +1,18 @@
+{
+  "geo": "http://www.opengis.net/ont/geosparql#",
+  "sf": "http://www.opengis.net/ont/sf#",
+  "locn": "http://www.w3.org/ns/locn#",
+  "capakey": "https://data.vlaanderen.be/id/perceel/",
+  "type": "@type",
+  "adres": {
+    "@id": "locn:address",
+    "@container": "@set"
+  },
+  "geometry": {
+    "@id": "geo:hasGeometry"
+  },
+  "wkt": {
+    "@id": "geo:asWKT",
+    "@type": "geo:wktLiteral"
+  }
+}
