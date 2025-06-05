@@ -1,4 +1,4 @@
-package be.vlaanderen.omgeving.capakeylodapi;
+package java.be.vlaanderen.omgeving.capakeylodapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ParcelControllerTest {
+class PerceelControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
