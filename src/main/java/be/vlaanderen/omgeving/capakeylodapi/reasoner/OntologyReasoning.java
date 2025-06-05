@@ -31,14 +31,14 @@ public class OntologyReasoning {
         Model model_geosparql = ModelFactory.createDefaultModel();
         InputStream geosparql = OntologyReasoning.class.getClassLoader().getResourceAsStream("geosparql_vocab_all.ttl");
         if (geosparql == null) {
-            throw new IllegalArgumentException("File not found: " + "geosparql_vocab_all.ttl");
+            throw new IllegalArgumentException("File not found: geosparql_vocab_all.ttl");
         }
         model_geosparql.read(geosparql, null, "TURTLE");
 
         Model model_locn = ModelFactory.createDefaultModel();
         InputStream locn = OntologyReasoning.class.getClassLoader().getResourceAsStream("locn.ttl");
         if (locn == null) {
-            throw new IllegalArgumentException("File not found: " + "locn.ttl");
+            throw new IllegalArgumentException("File not found: locn.ttl");
         }
         model_locn.read(locn, null, "TURTLE");
         Model m = model_locn.union(model_geosparql);
