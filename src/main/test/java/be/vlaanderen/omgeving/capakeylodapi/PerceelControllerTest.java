@@ -1,4 +1,4 @@
-package java.be.vlaanderen.omgeving.capakeylodapi;
+package be.vlaanderen.omgeving.capakeylodapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
