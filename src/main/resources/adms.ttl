@@ -1,0 +1,176 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix : <http://www.w3.org/ns/adms> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+
+adms:versionNotes  rdf:type  owl:DatatypeProperty;
+                   rdfs:comment      "A description of changes between this version and the previous version of the Asset."@en;
+                   rdfs:domain       rdfs:Resource;
+                   rdfs:isDefinedBy  :;
+                   rdfs:label        "version notes"@en;
+                   rdfs:range        rdfs:Literal .
+
+adms:translation  rdf:type  owl:ObjectProperty;
+                  rdfs:comment      "Links Assets that are translations of each other."@en;
+                  rdfs:domain       rdfs:Resource;
+                  rdfs:isDefinedBy  :;
+                  rdfs:label        "translation"@en;
+                  rdfs:range        rdfs:Resource .
+
+adms:supportedSchema  rdf:type  owl:ObjectProperty;
+                      rdfs:comment      "A schema according to which the Asset Repository can provide data about its content, e.g. ADMS."@en;
+                      rdfs:domain       rdfs:Resource;
+                      rdfs:isDefinedBy  :;
+                      rdfs:label        "supported schema"@en;
+                      rdfs:range        adms:Asset .
+
+adms:status  rdf:type     owl:ObjectProperty;
+             rdfs:comment      "The status of the Asset in the context of a particular workflow process."@en;
+             rdfs:domain       rdfs:Resource;
+             rdfs:isDefinedBy  :;
+             rdfs:label        "status"@en;
+             rdfs:range        <http://www.w3.org/2004/02/skos/core#Concept> .
+
+adms:schemaAgency  rdf:type  owl:DatatypeProperty;
+                   rdfs:comment      "The name of the agency that issued the identifier."@en;
+                   rdfs:domain       adms:Identifier;
+                   rdfs:isDefinedBy  :;
+                   rdfs:label        "schema agency"@en;
+                   rdfs:range        rdfs:Literal .
+
+adms:schemeAgency  rdf:type     owl:DatatypeProperty;
+                   rdfs:comment            "This property is deprecated because in in HTML specification another URI was used." , "The name of the agency that issued the identifier."@en;
+                   rdfs:domain             adms:Identifier;
+                   rdfs:isDefinedBy        :;
+                   rdfs:label              "schema agency"@en;
+                   rdfs:range              rdfs:Literal;
+                   dct:isReplacedBy        adms:schemaAgency;
+                   owl:deprecated          "true";
+                   owl:equivalentProperty  adms:schemaAgency .
+
+adms:sample  rdf:type     owl:ObjectProperty;
+             rdfs:comment      "Links to a sample of an Asset (which is itself an Asset)."@en;
+             rdfs:domain       rdfs:Resource;
+             rdfs:isDefinedBy  :;
+             rdfs:label        "sample"@en;
+             rdfs:range        rdfs:Resource .
+
+adms:representationTechnique
+    rdf:type          owl:ObjectProperty;
+    rdfs:comment      "More information about the format in which an Asset Distribution is released. This is different from the file format as, for example, a ZIP file (file format) could contain an XML schema (representation technique)."@en;
+    rdfs:domain       rdfs:Resource;
+    rdfs:isDefinedBy  :;
+    rdfs:label        "representation technique"@en;
+    rdfs:range        <http://www.w3.org/2004/02/skos/core#Concept> .
+
+adms:prev  rdf:type         owl:ObjectProperty;
+           rdfs:comment        "A link to the previous version of the Asset."@en;
+           rdfs:domain         rdfs:Resource;
+           rdfs:isDefinedBy    :;
+           rdfs:label          "prev"@en;
+           rdfs:range          rdfs:Resource;
+           rdfs:subPropertyOf  <http://www.w3.org/1999/xhtml/vocab#prev> .
+
+adms:next  rdf:type         owl:ObjectProperty;
+           rdfs:comment        "A link to the next version of the Asset."@en;
+           rdfs:domain         rdfs:Resource;
+           rdfs:isDefinedBy    :;
+           rdfs:label          "next"@en;
+           rdfs:range          rdfs:Resource;
+           rdfs:subPropertyOf  <http://www.w3.org/1999/xhtml/vocab#next> .
+
+adms:last  rdf:type         owl:ObjectProperty;
+           rdfs:comment        "A link to the current or latest version of the Asset."@en;
+           rdfs:domain         rdfs:Resource;
+           rdfs:isDefinedBy    :;
+           rdfs:label          "last"@en;
+           rdfs:range          rdfs:Resource;
+           rdfs:subPropertyOf  <http://www.w3.org/1999/xhtml/vocab#last> .
+
+adms:interoperabilityLevel
+    rdf:type          owl:ObjectProperty;
+    rdfs:comment      "The interoperability level for which the Asset is relevant."@en;
+    rdfs:domain       adms:Asset;
+    rdfs:isDefinedBy  :;
+    rdfs:label        "interoperability level"@en;
+    rdfs:range        <http://www.w3.org/2004/02/skos/core#Concept> .
+
+adms:includedAsset  rdf:type  owl:ObjectProperty;
+                    rdfs:comment      "An Asset that is contained in the Asset being described, e.g. when there are several vocabularies defined in a single document."@en;
+                    rdfs:domain       adms:Asset;
+                    rdfs:isDefinedBy  :;
+                    rdfs:label        "included asset"@en;
+                    rdfs:range        adms:Asset .
+
+adms:identifier  rdf:type  owl:ObjectProperty;
+                 rdfs:comment      "Links a resource to an adms:Identifier class."@en;
+                 rdfs:domain       rdfs:Resource;
+                 rdfs:isDefinedBy  :;
+                 rdfs:label        "identifier"@en;
+                 rdfs:range        adms:Identifier .
+
+adms:Identifier  rdf:type  owl:Class;
+                 rdfs:comment      "This is based on the UN/CEFACT Identifier class."@en;
+                 rdfs:isDefinedBy  :;
+                 rdfs:label        "Identifier"@en .
+
+adms:AssetRepository  rdf:type  owl:Class;
+                      rdfs:comment      "A system or service that provides facilities for storage and maintenance of descriptions of Assets and Asset Distributions, and functionality that allows users to search and access these descriptions. An Asset Repository will typically contain descriptions of several Assets and related Asset Distributions."@en;
+                      rdfs:isDefinedBy  :;
+                      rdfs:label        "Asset repository"@en .
+
+adms:AssetDistribution
+    rdf:type          owl:Class;
+    rdfs:comment      "A particular physical embodiment of an Asset, which is an example of the FRBR entity manifestation (the physical embodiment of an expression of a work)."@en;
+    rdfs:isDefinedBy  :;
+    rdfs:label        "Asset Distribution"@en .
+
+adms:Asset  rdf:type      owl:Class;
+            rdfs:comment      "An abstract entity that reflects the intellectual content of the asset and represents those characteristics of the asset that are independent of its physical embodiment. This abstract entity combines the FRBR entities work (a distinct intellectual or artistic creation) and expression (the intellectual or artistic realization of a work)"@en;
+            rdfs:isDefinedBy  :;
+            rdfs:label        "Asset"@en .
+
+:       rdf:type      owl:Ontology;
+        rdfs:label    "adms"@nl , "adms"@en;
+        dct:issued    "2023-04-05";
+        dct:license   <https://creativecommons.org/licenses/by/4.0/>;
+        dct:mediator  [ foaf:homepage  <https://semic.eu>;
+                        foaf:name      "Semantic Interoperability Community (SEMIC)"
+                      ];
+        <http://www.w3.org/2001/02pd/rec54#editor>
+                      [ rdf:type        foaf:Person;
+                        foaf:firstName  "Makx";
+                        foaf:lastName   "Dekkers"
+                      ];
+        <http://www.w3.org/2001/02pd/rec54#editor>
+                      [ rdf:type        foaf:Person;
+                        foaf:firstName  "Pavlina";
+                        foaf:lastName   "Fragkou";
+                        <https://schema.org/affiliation>
+                                        [ foaf:name  "SEMIC EU" ]
+                      ];
+        <http://www.w3.org/2001/02pd/rec54#editor>
+                      [ rdf:type        foaf:Person;
+                        foaf:firstName  "Natasa";
+                        foaf:lastName   "Sofou"
+                      ];
+        <http://www.w3.org/2001/02pd/rec54#editor>
+                      [ rdf:type        foaf:Person;
+                        foaf:firstName  "Bert";
+                        foaf:lastName   "Van Nuffelen";
+                        foaf:mbox       <mailto:bert.van.nuffelen@tenforce.com>;
+                        <https://schema.org/affiliation>
+                                        [ foaf:name  "TenForce" ]
+                      ];
+        foaf:maker    [ rdf:type        foaf:Person;
+                        foaf:firstName  "Pavlina";
+                        foaf:lastName   "Fragkou";
+                        <https://schema.org/affiliation>
+                                        [ foaf:name  "SEMIC EU" ]
+                      ] .
+
+

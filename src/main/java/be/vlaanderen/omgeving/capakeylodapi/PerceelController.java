@@ -1,9 +1,11 @@
 package be.vlaanderen.omgeving.capakeylodapi;
 
 import be.vlaanderen.omgeving.capakeylodapi.configuration.JsonldConfiguration;
+import be.vlaanderen.omgeving.capakeylodapi.reasoner.OntologyReasoning;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -50,6 +52,7 @@ public class PerceelController {
         headers.set("Accept", "application/json");
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
+        // TODO Server side error 500 ; Method threw 'org.springframework.web.client.HttpServerErrorException$InternalServerError' exception.
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         String json = response.getBody();
 
@@ -59,9 +62,9 @@ public class PerceelController {
                     .body(json);
         }
 
-        // Transform JSON -> JSON-LD
+        // Transform JSON-LD -> JSON-LD
         if (accept.contains("application/ld+json")) {
-            String jsonld = transformToJsonLd(json, capakey1 + "/" + capakey2);
+            String jsonld = rdfToJsonLd(jsonLdToRdf(transformToJsonLd(json, capakey1 + "/" + capakey2)));
             return ResponseEntity.ok()
                     .contentType(MediaType.valueOf("application/ld+json"))
                     .body(jsonld);
@@ -69,21 +72,27 @@ public class PerceelController {
 
         // Transform JSON -> Turtle
         if (accept.contains("text/turtle")) {
-            String jsonld = transformToJsonLd(json, capakey1 + "/" + capakey2);
-            String turtle = jsonLdToTurtle(jsonld);
+            String turtle = rdfToTurtle(jsonLdToRdf(transformToJsonLd(json, capakey1 + "/" + capakey2)));
             return ResponseEntity.ok()
                     .contentType(MediaType.valueOf("text/turtle"))
                     .body(turtle);
+        }
+
+        // Transform JSON -> RDF/XML
+        if (accept.contains("application/rdf+xml")) {
+            String rdfXml = rdfToRdfXml(jsonLdToRdf(transformToJsonLd(json, capakey1 + "/" + capakey2)));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.valueOf("application/rdf+xml"))
+                    .body(rdfXml);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Unsupported Accept header");
     }
 
     private String transformToJsonLd(String json, String fullCapakey) {
-        // Deze methode verwerkt de JSON en maakt een JSON-LD string zoals in jouw voorbeeld.
+        // Deze methode verwerkt de JSON en maakt een JSON-LD string.
         // In een productie-omgeving zou je dit netjes modelleren. Voor nu volstaat een snelle parse & build.
         try {
-
             ObjectMapper mapper = new ObjectMapper();
 //            JsonNode
             ObjectNode root = (ObjectNode) mapper.readTree(json);
@@ -98,6 +107,7 @@ public class PerceelController {
             ObjectNode jsonld = mapper.createObjectNode();
             jsonld.set("@context", context);
             jsonld.put("@id", "https://data.vlaanderen.be/id/perceel/" + fullCapakey);
+            //jsonld.put("type", "geo:Feature");
             jsonld.put("departmentCode", root.get("departmentCode").asText());
             jsonld.put("departmentName", root.get("departmentName").asText());
             jsonld.put("sectionCode", root.get("sectionCode").asText());
@@ -110,36 +120,34 @@ public class PerceelController {
             ObjectNode geometry = mapper.createObjectNode();
             geometry.put("@id", "https://data.vlaanderen.be/id/geometry/capakey/" + fullCapakey);
             //geometry.put("type", "sf:Polygon");
-            geometry.put("type", "geo:Geometry");
+            //geometry.put("type", "geo:Geometry");
             geometry.put("wkt", wkt);
             jsonld.set("geometry", geometry);
 
             ObjectNode address = mapper.createObjectNode();
-            address.put("type", "locn:Address");
+            //address.put("type", "locn:Address");
             address.set("fullAddress", root.get("adres"));
             address.set("postName", root.get("municipalityName"));
             jsonld.set("adres", address);
 
             ObjectNode locn = mapper.createObjectNode();
-            locn.put("type", "dct:Location");
+            //locn.put("type", "dct:Location");
             locn.set("municipalityName", root.get("municipalityName"));
             jsonld.set("location", locn);
 
             ObjectNode ident = mapper.createObjectNode();
             ident.put("@id", "https://data.vlaanderen.be/id/identifier/capakey/" + fullCapakey);
-            ident.put("type", "adms:Identifier");
+            //ident.put("type", "adms:Identifier");
             ident.put("capakey", fullCapakey);
             jsonld.set("identifier", ident);
-
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonld);
-
         }
         catch (Exception e) {
             throw new RuntimeException("Failed to transform JSON to JSON-LD", e);
         }
     }
 
-    private String jsonLdToTurtle(String jsonld) {
+    private Model jsonLdToRdf(String jsonld) {
         Model model = ModelFactory.createDefaultModel();
         try (InputStream is = new ByteArrayInputStream(jsonld.getBytes(StandardCharsets.UTF_8))) {
             RDFParser.source(is).lang(Lang.JSONLD).parse(model);
@@ -147,9 +155,27 @@ public class PerceelController {
         catch (Exception e) {
             throw new RuntimeException("Failed to parse JSON-LD to RDF", e);
         }
+        return model;
+    }
 
+    private String rdfToTurtle(Model model) {
+        Model infModel = new OntologyReasoning().inferTriples(model);
         StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, model, Lang.TURTLE);
+        RDFDataMgr.write(writer, infModel, Lang.TURTLE);
+        return writer.toString();
+    }
+
+    private String rdfToRdfXml(Model model) {
+        Model infModel = new OntologyReasoning().inferTriples(model);
+        StringWriter writer = new StringWriter();
+        RDFDataMgr.write(writer, infModel, Lang.RDFXML);
+        return writer.toString();
+    }
+
+    private String rdfToJsonLd(Model model) {
+        Model infModel = new OntologyReasoning().inferTriples(model);
+        StringWriter writer = new StringWriter();
+        RDFDataMgr.write(writer, infModel, Lang.JSONLD);
         return writer.toString();
     }
 }

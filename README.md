@@ -6,6 +6,7 @@ Deze webapplicatie stelt een eenvoudige HTTP-API beschikbaar waarmee je informat
 - `application/json` (originele API-response)
 - `application/ld+json` (verrijkte JSON-LD)
 - `text/turtle` (geparsed RDF-model in Turtle)
+- `application/rdf+xml` (geparsed RDF-model in rdf/xml)
 
 ---
 
@@ -54,6 +55,12 @@ De applicatie draait standaard op:
 ```
    Geeft RDF-data terug in text/turtle formaat, bruikbaar in triple stores of RDF-tooling.
 
+### 4. Opvragen als Rdf/Xml
+```bash
+   curl -H "Accept: application/rdf+xml" http://localhost:8080/id/perceel/24504D0693/00B000
+```
+Geeft RDF-data terug in rdf/xml formaat, bruikbaar in triple stores, RDF-tooling, of xslt-processen.
+
 ## 📦 Endpoints
 | Methode | Endpoint | Beschrijving |
 | :----- | :-----: | :----- |
@@ -69,7 +76,17 @@ Voorbeeld:
 
  - Jackson voor JSON-parsing
 
- - Apache Jena om JSON-LD naar Turtle te transformeren
+ - Apache Jena om JSON-LD naar Rdf te transformeren 
+
+ - Apache Jena om Rdf te serialiseren naar JSON-LD, Turtle of Rdf/Xml
+
+ - Apache Jena om Rdf te verrijken door reasoning
+
 
 ## 📝 Licentie
 MIT – Vrij te gebruiken, aanpassen of verspreiden. Link graag terug naar dit project als je het gebruikt.
+
+
+## Voorgesteld Model
+
+![Model](src/documentation/model.png)

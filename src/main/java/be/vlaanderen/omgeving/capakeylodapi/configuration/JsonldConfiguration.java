@@ -12,6 +12,7 @@ import org.springframework.core.io.ResourceLoader;
 import java.io.IOException;
 import java.io.InputStream;
 
+
 /**
  *
  */
@@ -35,6 +36,4 @@ public class JsonldConfiguration {
     private Resource loadJsonLDContext() {
         return contextFile;
     }
-
-
 }

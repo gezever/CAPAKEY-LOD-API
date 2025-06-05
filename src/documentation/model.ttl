@@ -1,0 +1,46 @@
+PREFIX adms:    <http://www.w3.org/ns/adms#>
+PREFIX concept: <https://data.omgeving.vlaanderen.be/id/concept/chemische_stof/>
+PREFIX cs:      <https://data.vlaanderen.be/ns/chemische_stof#>
+PREFIX dbo:     <http://dbpedia.org/ontology/>
+PREFIX dbp:     <http://dbpedia.org/property/>
+PREFIX dct:     <http://purl.org/dc/terms/>
+PREFIX geo:     <http://www.opengis.net/ont/geosparql#>
+PREFIX locn:    <http://www.w3.org/ns/locn#>
+PREFIX owl:     <http://www.w3.org/2002/07/owl#>
+PREFIX perceel: <https://data.vlaanderen.be/ns/perceel#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sf:      <http://www.opengis.net/ont/sf#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX vlcs:    <https://data.omgeving.vlaanderen.be/id/conceptscheme/>
+PREFIX xs:      <http://www.w3.org/2001/XMLSchema#>
+
+adms:Identifier  rdf:type  "rdfs:Resource";
+        skos:notation  "https://data.vlaanderen.be/ns/perceel#capakey" .
+
+
+
+geo:Feature  rdf:type           "rdfs:Resource";
+        geo:hasGeometry         geo:Geometry;
+        adms:identifier         adms:Identifier;
+        locn:address            locn:Address;
+        locn:location           dct:Location;
+        perceel:bisnummer       "http://www.w3.org/2001/XMLSchema#string";
+        perceel:departmentCode  "http://www.w3.org/2001/XMLSchema#string";
+        perceel:departmentName  "http://www.w3.org/2001/XMLSchema#string";
+        perceel:exponent        "http://www.w3.org/2001/XMLSchema#string";
+        perceel:grondnummer     "http://www.w3.org/2001/XMLSchema#string";
+        perceel:macht           "http://www.w3.org/2001/XMLSchema#string";
+        perceel:perceelnummer   "http://www.w3.org/2001/XMLSchema#string";
+        perceel:sectionCode     "http://www.w3.org/2001/XMLSchema#string" .
+
+geo:Geometry  rdf:type        "rdfs:Resource";
+        geo:asWKT             "http://www.opengis.net/ont/geosparql#wktLiteral";
+        geo:hasSerialization  "http://www.opengis.net/ont/geosparql#wktLiteral" .
+
+dct:Location  rdf:type       "rdfs:Resource";
+        locn:geographicName  "http://www.w3.org/2001/XMLSchema#string" .
+
+locn:Address  rdf:type    "rdfs:Resource";
+        locn:fullAddress  "http://www.w3.org/2001/XMLSchema#string";
+        locn:postName     "http://www.w3.org/2001/XMLSchema#string" .
