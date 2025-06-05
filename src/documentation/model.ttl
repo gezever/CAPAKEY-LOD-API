@@ -15,32 +15,32 @@ PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
 PREFIX vlcs:    <https://data.omgeving.vlaanderen.be/id/conceptscheme/>
 PREFIX xs:      <http://www.w3.org/2001/XMLSchema#>
 
-adms:Identifier  rdf:type  "rdfs:Resource";
-        skos:notation  "https://data.vlaanderen.be/ns/perceel#capakey" .
+adms:Identifier
+        skos:notation  "perceel:capakey" .
 
 
 
-geo:Feature  rdf:type           "rdfs:Resource";
+geo:Feature
         geo:hasGeometry         geo:Geometry;
         adms:identifier         adms:Identifier;
         locn:address            locn:Address;
         locn:location           dct:Location;
-        perceel:bisnummer       "http://www.w3.org/2001/XMLSchema#string";
-        perceel:departmentCode  "http://www.w3.org/2001/XMLSchema#string";
-        perceel:departmentName  "http://www.w3.org/2001/XMLSchema#string";
-        perceel:exponent        "http://www.w3.org/2001/XMLSchema#string";
-        perceel:grondnummer     "http://www.w3.org/2001/XMLSchema#string";
-        perceel:macht           "http://www.w3.org/2001/XMLSchema#string";
-        perceel:perceelnummer   "http://www.w3.org/2001/XMLSchema#string";
-        perceel:sectionCode     "http://www.w3.org/2001/XMLSchema#string" .
+        perceel:bisnummer       "xs:string";
+        perceel:departmentCode  "xs:string";
+        perceel:departmentName  "xs:string";
+        perceel:exponent        "xs:string";
+        perceel:grondnummer     "xs:string";
+        perceel:macht           "xs:string";
+        perceel:perceelnummer   "xs:string";
+        perceel:sectionCode     "xs:string" .
 
-geo:Geometry  rdf:type        "rdfs:Resource";
-        geo:asWKT             "http://www.opengis.net/ont/geosparql#wktLiteral";
-        geo:hasSerialization  "http://www.opengis.net/ont/geosparql#wktLiteral" .
+geo:Geometry
+        geo:asWKT             "geo:wktLiteral";
+        geo:hasSerialization  "geo:wktLiteral" .
 
-dct:Location  rdf:type       "rdfs:Resource";
-        locn:geographicName  "http://www.w3.org/2001/XMLSchema#string" .
+dct:Location
+        locn:geographicName  "xs:string" .
 
-locn:Address  rdf:type    "rdfs:Resource";
-        locn:fullAddress  "http://www.w3.org/2001/XMLSchema#string";
-        locn:postName     "http://www.w3.org/2001/XMLSchema#string" .
+locn:Address
+        locn:fullAddress  "xs:string";
+        locn:postName     "xs:string" .

@@ -87,6 +87,6 @@ Voorbeeld:
 MIT – Vrij te gebruiken, aanpassen of verspreiden. Link graag terug naar dit project als je het gebruikt.
 
 
-## Voorgesteld Model
+## 📈 Voorgesteld Model
 
 ![Model](src/documentation/model.png)
