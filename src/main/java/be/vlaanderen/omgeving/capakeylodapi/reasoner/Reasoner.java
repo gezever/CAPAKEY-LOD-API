@@ -3,7 +3,6 @@ package be.vlaanderen.omgeving.capakeylodapi.reasoner;
 
 import java.io.BufferedReader;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.reasoner.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.apache.jena.reasoner.rulesys.*;
@@ -12,7 +11,7 @@ import java.util.List;
 
 import java.io.InputStream;
 
-public class OntologyReasoning {
+public class Reasoner {
 
     @Value("classpath:geosparql_vocab_all.ttl")
     private Resource geosparql;
@@ -22,21 +21,21 @@ public class OntologyReasoning {
 
     public static Model loadTurtleFromClasspath() {
         Model model_adms = ModelFactory.createDefaultModel();
-        InputStream adms = OntologyReasoning.class.getClassLoader().getResourceAsStream("adms.ttl");
+        InputStream adms = Reasoner.class.getClassLoader().getResourceAsStream("adms.ttl");
         if (adms == null) {
             throw new IllegalArgumentException("File not found: " + "admsttl");
         }
         model_adms.read(adms, null, "TURTLE");
 
         Model model_geosparql = ModelFactory.createDefaultModel();
-        InputStream geosparql = OntologyReasoning.class.getClassLoader().getResourceAsStream("geosparql_vocab_all.ttl");
+        InputStream geosparql = Reasoner.class.getClassLoader().getResourceAsStream("geosparql_vocab_all.ttl");
         if (geosparql == null) {
             throw new IllegalArgumentException("File not found: geosparql_vocab_all.ttl");
         }
         model_geosparql.read(geosparql, null, "TURTLE");
 
         Model model_locn = ModelFactory.createDefaultModel();
-        InputStream locn = OntologyReasoning.class.getClassLoader().getResourceAsStream("locn.ttl");
+        InputStream locn = Reasoner.class.getClassLoader().getResourceAsStream("locn.ttl");
         if (locn == null) {
             throw new IllegalArgumentException("File not found: locn.ttl");
         }
@@ -60,7 +59,7 @@ public class OntologyReasoning {
         //Reasoner reasoner = ReasonerRegistry.getRDFSReasoner();
         //Reasoner reasoner = ReasonerRegistry.getOWLReasoner(); // or getRDFSReasoner()
 
-        Reasoner reasoner = new GenericRuleReasoner(rules);
+        org.apache.jena.reasoner.Reasoner reasoner = new GenericRuleReasoner(rules);
         reasoner.setDerivationLogging(true);  // optional
 
         InfModel infModel = ModelFactory.createInfModel(reasoner, combinedModel);

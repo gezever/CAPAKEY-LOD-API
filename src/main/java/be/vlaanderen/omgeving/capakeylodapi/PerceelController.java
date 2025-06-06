@@ -1,16 +1,16 @@
 package be.vlaanderen.omgeving.capakeylodapi;
 
 import be.vlaanderen.omgeving.capakeylodapi.configuration.JsonldConfiguration;
-import be.vlaanderen.omgeving.capakeylodapi.reasoner.OntologyReasoning;
+import be.vlaanderen.omgeving.capakeylodapi.reasoner.Reasoner;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFParser;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -62,7 +62,7 @@ public class PerceelController {
                     .body(json);
         }
 
-        // Transform JSON-LD -> JSON-LD
+        // Transform JSON -> JSON-LD
         if (accept.contains("application/ld+json")) {
             String jsonld = rdfToJsonLd(jsonLdToRdf(transformToJsonLd(json, capakey1 + "/" + capakey2)));
             return ResponseEntity.ok()
@@ -71,7 +71,7 @@ public class PerceelController {
         }
 
         // Transform JSON -> Turtle
-        if (accept.contains("text/turtle")) {
+        if (accept.contains("text/turtle")||accept.contains("text/html")) {
             String turtle = rdfToTurtle(jsonLdToRdf(transformToJsonLd(json, capakey1 + "/" + capakey2)));
             return ResponseEntity.ok()
                     .contentType(MediaType.valueOf("text/turtle"))
@@ -147,6 +147,7 @@ public class PerceelController {
         }
     }
 
+    @NotNull
     private Model jsonLdToRdf(String jsonld) {
         Model model = ModelFactory.createDefaultModel();
         try (InputStream is = new ByteArrayInputStream(jsonld.getBytes(StandardCharsets.UTF_8))) {
@@ -155,27 +156,24 @@ public class PerceelController {
         catch (Exception e) {
             throw new RuntimeException("Failed to parse JSON-LD to RDF", e);
         }
-        return model;
+        return new Reasoner().inferTriples(model);
     }
 
     private String rdfToTurtle(Model model) {
-        Model infModel = new OntologyReasoning().inferTriples(model);
         StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, infModel, Lang.TURTLE);
+        RDFDataMgr.write(writer, model, Lang.TURTLE);
         return writer.toString();
     }
 
     private String rdfToRdfXml(Model model) {
-        Model infModel = new OntologyReasoning().inferTriples(model);
         StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, infModel, Lang.RDFXML);
+        RDFDataMgr.write(writer, model, Lang.RDFXML);
         return writer.toString();
     }
 
     private String rdfToJsonLd(Model model) {
-        Model infModel = new OntologyReasoning().inferTriples(model);
         StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, infModel, Lang.JSONLD);
+        RDFDataMgr.write(writer, model, Lang.JSONLD);
         return writer.toString();
     }
 }
