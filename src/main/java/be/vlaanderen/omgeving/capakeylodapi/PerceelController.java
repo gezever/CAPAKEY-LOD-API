@@ -1,6 +1,7 @@
 package be.vlaanderen.omgeving.capakeylodapi;
 
 import be.vlaanderen.omgeving.capakeylodapi.configuration.JsonldConfiguration;
+import be.vlaanderen.omgeving.capakeylodapi.configuration.ReasoningModelConfiguration;
 import be.vlaanderen.omgeving.capakeylodapi.reasoner.Reasoner;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -40,6 +41,8 @@ public class PerceelController {
     private final RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private JsonldConfiguration jsonldConfiguration ;
+    @Autowired
+    private ReasoningModelConfiguration reasoningModelConfiguration ;
 
     @GetMapping("/{capakey1}/{capakey2}")
     public ResponseEntity<String> getPerceel(
@@ -156,7 +159,7 @@ public class PerceelController {
         catch (Exception e) {
             throw new RuntimeException("Failed to parse JSON-LD to RDF", e);
         }
-        return new Reasoner().inferTriples(model);
+        return new Reasoner().inferTriples(model, reasoningModelConfiguration.loadTurtleFromClasspath(), reasoningModelConfiguration.getRules());
     }
 
     private String rdfToTurtle(Model model) {
