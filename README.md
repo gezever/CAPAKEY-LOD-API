@@ -82,6 +82,8 @@ Voorbeeld:
 
  - Apache Jena om Rdf te verrijken door reasoning
 
+ - Jsonld-java om de json-ld te framen
+
 
 ## 📝 Licentie
 MIT – Vrij te gebruiken, aanpassen of verspreiden. Link graag terug naar dit project als je het gebruikt.
