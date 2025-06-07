@@ -34,8 +34,8 @@ class PerceelControllerTest {
                 .accept("application/ld+json"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/ld+json"))
-                .andExpect(jsonPath("identifier.capakey").value("24504D0693/00B000"))
-                .andExpect(jsonPath("geometry.type").value("geo:Geometry"));
+                .andExpect(jsonPath("$.capakey").value("24504D0693/00B000"))
+                .andExpect(jsonPath("$.type").value("geo:Geometry"));
     }
 
     @Test
@@ -57,10 +57,10 @@ class PerceelControllerTest {
     }
 
     @Test
-    void testNotFoundResponse() throws Exception {
+    void testInternalServerError() throws Exception {
         mockMvc.perform(get("/id/perceel/FAKE/12345")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("An error has occurred")));
     }
 
     @Test

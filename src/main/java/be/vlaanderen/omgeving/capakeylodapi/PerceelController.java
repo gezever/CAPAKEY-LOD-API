@@ -6,6 +6,9 @@ import be.vlaanderen.omgeving.capakeylodapi.reasoner.Reasoner;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.jsonldjava.core.JsonLdOptions;
+import com.github.jsonldjava.core.JsonLdProcessor;
+import com.github.jsonldjava.utils.JsonUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -27,12 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/id/perceel")
@@ -48,7 +50,7 @@ public class PerceelController {
     public ResponseEntity<String> getPerceel(
             @PathVariable String capakey1,
             @PathVariable String capakey2,
-            @RequestHeader("Accept") String accept) {
+            @RequestHeader("Accept") String accept) throws IOException {
 
         String url = String.format("https://geo.api.vlaanderen.be/capakey/v2/parcel/%s/%s?geometry=full", capakey1, capakey2);
         HttpHeaders headers = new HttpHeaders();
@@ -174,9 +176,29 @@ public class PerceelController {
         return writer.toString();
     }
 
-    private String rdfToJsonLd(Model model) {
+    private String rdfToJsonLd(Model model) throws IOException{
         StringWriter writer = new StringWriter();
         RDFDataMgr.write(writer, model, Lang.JSONLD);
-        return writer.toString();
+        return frameJsonLd(writer.toString());
     }
+
+    private String frameJsonLd(String jsonldString) throws IOException {
+        Object jsonObject = JsonUtils.fromString(jsonldString);
+        // Define your frame
+        Object frame = jsonldConfiguration.getJsonLDFrame();
+        // Frame the JSON-LD
+        JsonLdOptions options = new JsonLdOptions();
+        Map<String, Object> framed = JsonLdProcessor.frame(jsonObject, frame, options);
+        if (framed.containsKey("@graph")) {
+            List<?> graph = (List<?>) framed.get("@graph");
+            if (graph.size() == 1) {
+                // Promote the node outside of @graph
+                Map<String, Object> singleNode = (Map<String, Object>) graph.get(0);
+                singleNode.put("@context", framed.get("@context"));
+                framed = singleNode;
+            }
+        }
+        return JsonUtils.toPrettyString(framed);
+    }
+
 }

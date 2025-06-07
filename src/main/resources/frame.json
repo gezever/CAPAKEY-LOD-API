@@ -1,0 +1,76 @@
+{
+  "@context": {
+    "geo" : "http://www.opengis.net/ont/geosparql#",
+    "sf" : "http://www.opengis.net/ont/sf#",
+    "locn" : "http://www.w3.org/ns/locn#",
+    "perceel": "https://data.vlaanderen.be/ns/perceel#",
+    "xs" : "http://www.w3.org/2001/XMLSchema#",
+    "dct" : "http://purl.org/dc/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "adms": "http://www.w3.org/ns/adms#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "adres" : {
+      "@id" : "locn:address",
+      "@type" : "@id"
+    },
+    "fullAddress" : {
+      "@id" : "locn:fullAddress",
+      "@type" : "xs:string",
+      "@container" : "@set"
+    },
+    "location" : {
+      "@id" : "locn:location",
+      "@type" : "@id"
+    },
+    "municipalityName" : {
+      "@id" : "locn:geographicName"
+    },
+    "postName" : {
+      "@id" : "locn:postName"
+    },
+    "geometry" : {
+      "@id" : "geo:hasGeometry"
+    },
+    "wkt" : {
+      "@id" : "geo:asWKT",
+      "@type" : "geo:wktLiteral"
+    },
+
+    "identifier" : {
+      "@id" : "adms:identifier",
+      "@type" : "@id"
+    },
+    "capakey": {
+      "@id" : "skos:notation",
+      "@type" : "perceel:capakey"
+    },
+    "type" : "@type",
+    "id": "@id",
+    "departmentCode": {
+      "@id" : "perceel:departmentCode"
+    },
+    "departmentName": {
+      "@id" : "perceel:departmentName"
+    },
+    "sectionCode": {
+      "@id" : "perceel:sectionCode"
+    },
+    "perceelnummer": {
+      "@id" : "perceel:perceelnummer"
+    },
+    "grondnummer": {
+      "@id" : "perceel:grondnummer"
+    },
+    "exponent": {
+      "@id" : "perceel:exponent"
+    },
+    "macht": {
+      "@id" : "perceel:macht"
+    },
+    "bisnummer": {
+      "@id" : "perceel:bisnummer"
+    }
+  },
+  "@type": "geo:Feature",
+  "@embed": "@always"
+}

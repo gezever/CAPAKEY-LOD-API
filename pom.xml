@@ -40,6 +40,13 @@
             <type>pom</type>
         </dependency>
 
+        <!-- JSONLD-Java -->
+        <dependency>
+            <groupId>com.github.jsonld-java</groupId>
+            <artifactId>jsonld-java</artifactId>
+            <version>0.13.3</version> <!-- Check for latest -->
+        </dependency>
+
         <!-- Spring Boot Test (optioneel) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

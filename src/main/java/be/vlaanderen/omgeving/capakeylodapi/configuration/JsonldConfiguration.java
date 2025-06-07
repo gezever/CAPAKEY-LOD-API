@@ -2,15 +2,15 @@ package be.vlaanderen.omgeving.capakeylodapi.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.jsonldjava.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -21,6 +21,9 @@ public class JsonldConfiguration {
 
     @Value("classpath:context.json")
     private Resource contextFile;
+
+    @Value("classpath:frame.json")
+    private Resource jsonldFrame;
 
     @Bean
     public JsonNode getJsonLDContext() {
@@ -33,7 +36,19 @@ public class JsonldConfiguration {
         }
     }
 
+    @Bean
+    public Object getJsonLDFrame() throws IOException {
+        Resource resource = loadJsonLDFrame();
+        String frameStr = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        return JsonUtils.fromString(frameStr);
+    }
+
+
     private Resource loadJsonLDContext() {
         return contextFile;
+    }
+
+    private Resource loadJsonLDFrame() {
+        return jsonldFrame;
     }
 }
