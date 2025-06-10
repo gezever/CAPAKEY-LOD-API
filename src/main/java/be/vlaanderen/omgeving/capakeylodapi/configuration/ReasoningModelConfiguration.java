@@ -20,7 +20,7 @@ import java.util.List;
 @Configuration
 public class ReasoningModelConfiguration {
 
-    @Value("classpath:be/vlaanderen/data/id/perceel/domain-range.rules")
+    @Value("classpath:be/vlaanderen/data/id/perceel/domain-range-subproperty.rules")
     private Resource rules;
 
     @Value("classpath:org/w3/www/ns/adms/adms.ttl")

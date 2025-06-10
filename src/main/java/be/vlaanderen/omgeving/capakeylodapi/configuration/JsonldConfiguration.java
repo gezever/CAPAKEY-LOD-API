@@ -23,7 +23,7 @@ public class JsonldConfiguration {
     @Value("classpath:be/vlaanderen/data/id/perceel/context.json")
     private Resource contextFile;
 
-    @Value("classpath:be/vlaanderen/data/id/perceel/frame.json")
+    @Value("classpath:be/vlaanderen/data/id/perceel/frame_skeleton.json")
     private Resource jsonldFrame;
 
     @Bean
