@@ -34,8 +34,8 @@ class PerceelControllerTest {
                 .accept("application/ld+json"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/ld+json"))
-                .andExpect(jsonPath("$.capakey").value("24504D0693/00B000"))
-                .andExpect(jsonPath("$.type").value("geo:Geometry"));
+                .andExpect(jsonPath("identifier.capakey").value("24504D0693/00B000"))
+                .andExpect(jsonPath("geometry.type").value("geo:Geometry"));
     }
 
     @Test
