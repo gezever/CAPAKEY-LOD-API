@@ -2,7 +2,7 @@ package be.vlaanderen.omgeving.capakeylodapi.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.jsonldjava.utils.JsonUtils;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 
 /**
@@ -37,10 +38,14 @@ public class JsonldConfiguration {
     }
 
     @Bean
-    public Object getJsonLDFrame() throws IOException {
+    public Map getJsonLDFrame() throws IOException {
+        JsonNode context = getJsonLDContext();
+        ObjectMapper mapper = new ObjectMapper();
         Resource resource = loadJsonLDFrame();
         String frameStr = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-        return JsonUtils.fromString(frameStr);
+        ObjectNode frame = (ObjectNode) mapper.readTree(frameStr);
+        frame.set("@context", context);
+        return mapper.convertValue(frame, Map.class);
     }
 
 
