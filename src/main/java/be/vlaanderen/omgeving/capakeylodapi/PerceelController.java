@@ -107,7 +107,7 @@ public class PerceelController {
             for (JsonNode coord : coords) {
                 wktCoords.add(coord.get(0).asText() + " " + coord.get(1).asText());
             }
-            String wkt = "POLYGON((" + String.join(", ", wktCoords) + "))";
+            String wkt = "SRID=31370;POLYGON((" + String.join(", ", wktCoords) + "))";
 
             ObjectNode jsonld = mapper.createObjectNode();
             jsonld.set("@context", context);
