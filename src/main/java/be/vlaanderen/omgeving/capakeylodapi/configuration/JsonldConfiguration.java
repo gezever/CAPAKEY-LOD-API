@@ -19,10 +19,10 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 public class JsonldConfiguration {
 
-    @Value("classpath:context.json")
+    @Value("classpath:be/vlaanderen/data/id/perceel/context.json")
     private Resource contextFile;
 
-    @Value("classpath:frame.json")
+    @Value("classpath:be/vlaanderen/data/id/perceel/frame.json")
     private Resource jsonldFrame;
 
     @Bean

@@ -20,16 +20,16 @@ import java.util.List;
 @Configuration
 public class ReasoningModelConfiguration {
 
-    @Value("classpath:domain-range.rules")
+    @Value("classpath:be/vlaanderen/data/id/perceel/domain-range.rules")
     private Resource rules;
 
-    @Value("classpath:adms.ttl")
+    @Value("classpath:org/w3/www/ns/adms/adms.ttl")
     private Resource adms;
 
-    @Value("classpath:geosparql_vocab_all.ttl")
+    @Value("classpath:net/opengis/www/ont/geosparql/geosparql_vocab_all.ttl")
     private Resource geosparql;
 
-    @Value("classpath:locn.ttl")
+    @Value("classpath:org/w3/www/ns/locn/locn.ttl")
     private Resource locn;
 
     @Bean
