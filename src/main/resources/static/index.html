@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>CAPAKEY-LOD-API</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+<h3>DEMO LOD API PERCELEN</h3>
+<p>Perceel API - Vlaamse Percelen van JSON naar JSON-LD en Turtle</p>
+<p>Deze webapplicatie stelt een eenvoudige HTTP-API beschikbaar waarmee je informatie over een Vlaams perceel (op basis van CAPAKey) kunt opvragen in verschillende formaten:</p>
+<ul>
+    <li>application/json (originele API-response)</li>
+    <li>application/ld+json (verrijkte JSON-LD)</li>
+    <li>text/turtle (geparsed RDF-model in Turtle)</li>
+    <li>application/rdf+xml (geparsed RDF-model in rdf/xml)</li>
+    <li>text/html</li>
+</ul>
+<p>Het gewenste formaat kan opgevraagd worden via content negotiatie:</p>
+<ul>
+    <li>Ofwel via de HTTP ACCEPT header</li>
+    <li>Ofwel via de query parameter 'format' met 1 van de volgende waarden: json, jsonld, ttl, rdf</li>
+</ul>
+
+<h4>Voorbeelden</h4>
+<p>Voorbeeld 1 <a href="http://localhost:8080/id/perceel/24504D0693/00B000" target="_blank">Perceel 24504D0693/00B000</a></p>
+<p>Voorbeeld 2 <a href="http://localhost:8080/id/perceel/24504D0064/00D002" target="_blank">Perceel 24504D0064/00D002</a></p>
+<p>Voorbeeld 3 <a href="http://localhost:8080/id/perceel/24504E0003/00A004" target="_blank">Perceel 24504E0003/00A004</a></p>
+</body>
+</html>

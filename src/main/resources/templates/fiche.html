@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Fiche perceel '+${uri}">Perceel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.3.0/dist/ol.css"/>-->
+    <style>
+        /* Optioneel: wat styling voor de visualisatie */
+        #graph {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="/jsonld-vis.css" type="text/css" />
+</head>
+<body>
+<table>
+    <tr>
+        <td><a th:href="${uri}+'?format=ttl'" target="_blank"><span>turtle</span></a></td>
+        <td><a th:href="${uri}+'?format=rdf'"><span>rdf/xml</span></a></td>
+        <td><a th:href="${uri}+'?format=jsonld'" target="_blank"><span>jsonld</span></a></td>
+        <td><a th:href="${uri}+'?format=json'" target="_blank"><span>json(original api call)</span></a></td>
+    </tr>
+</table>
+<h3 th:text="Perceel +' '+ ${capakey}">Perceel capakey</h3>
+<p><a th:href="${uri}"><span th:text="${uri}">uri</span></a></p>
+<h3>Map</h3>
+<div id="map"></div>
+<h3>Eigenschappen</h3>
+<table>
+    <tr th:each="entry : ${fields}">
+        <td th:text="${entry.key}">property</td>
+        <td th:text="${entry.value}">waarde</td>
+    </tr>
+</table>
+<h3>Visualisatie</h3>
+<div id="graph"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/wicket/wicket.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/wicket/wicket-leaflet.min.js"></script>
+<script th:inline="javascript">
+    // Jouw WKT polygoon als string
+    // var wktLiteral = 'POLYGON ((4.696269603137596 50.87616144033434, 4.696238287231967 50.876167513332085, 4.696197980207098 50.876175331773894, 4.696174844475318 50.87617981864159, 4.696144886079909 50.8761262940154, 4.696140982851835 50.87611702604454, 4.696123711936095 50.87608679142317, 4.696088862676161 50.876025782799644, 4.696180086771623 50.87599874943316, 4.69622553202141 50.8760813480475, 4.696232874725163 50.87609469005802, 4.696235350542515 50.876099189095136, 4.696253379466069 50.8761319541749, 4.696269603137596 50.87616144033434))';
+    var wktLiteral = [[${polygon}]]
+
+    // var wktLiteral = 'POINT((4.7083 50.8802))';
+    // var centerLat = 50.8798; // y
+    // var centerLng = 4.6992; // x
+    var centerLat = [[${centerY}]]
+    var centerLng = [[${centerX}]]
+
+    var center = L.latLng(centerLat, centerLng);
+
+    // Gebruik Wicket om WKT te parsen
+    var wicket = new Wkt.Wkt();
+
+    wicket.read(wktLiteral);
+    // Converteer naar Leaflet laag
+    var leafletLayer = wicket.toObject({color: 'blue', weight: 2});
+
+    // Initialiseer de kaart en zet centrum
+    var map = L.map('map').setView(center, 18);
+
+    // Voeg een basislaag toe
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker = L.marker(center).addTo(map);
+    // Voeg de polygoon toe aan de kaart
+    leafletLayer.addTo(map);
+</script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
+<script src="/jsonld-vis.js"></script>
+<script>
+    var mockData = [(${jsonld})]
+    d3.jsonldVis(mockData, '#graph', {
+        w: 800,
+        h: 600,
+        maxLabelWidth: 250,
+        tipClassName: 'tip-class'
+    });
+</script>
+</body>
+</html>
