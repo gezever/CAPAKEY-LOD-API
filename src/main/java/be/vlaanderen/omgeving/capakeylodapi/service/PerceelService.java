@@ -57,6 +57,11 @@ public class PerceelService {
         return rdfToJsonLd(model);
     }
 
+    public String getJsonLd(String originalJson, String capakey1, String capakey2) {
+        Model model = extractModel(originalJson, capakey1, capakey2);
+        return rdfToJsonLd(model);
+    }
+
     public Model extractModel(String capakey1, String capakey2) {
         String json = extractJsonLd(capakey1, capakey2);
         return parseModelFromJsonLD(json);

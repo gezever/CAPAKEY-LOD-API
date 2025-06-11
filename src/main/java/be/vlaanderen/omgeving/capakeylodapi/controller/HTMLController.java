@@ -57,7 +57,8 @@ public class HTMLController {
             Model model) {
 
         String json = perceelService.getJson(capakey1, capakey2);
-        String jsonld = rdfToLang(perceelService.extractModel(json, capakey1, capakey2), JSONLD);
+        //String jsonld = rdfToLang(perceelService.extractModel(json, capakey1, capakey2), JSONLD);
+        String jsonld = perceelService.getJsonLd(json, capakey1, capakey2);
 
         Map jsonAsMap;
         String polygon;
