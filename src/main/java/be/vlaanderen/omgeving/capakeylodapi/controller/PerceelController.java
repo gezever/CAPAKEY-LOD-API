@@ -1,4 +1,4 @@
-package be.vlaanderen.omgeving.capakeylodapi;
+package be.vlaanderen.omgeving.capakeylodapi.controller;
 
 import be.vlaanderen.omgeving.capakeylodapi.service.PerceelService;
 import org.apache.jena.rdf.model.Model;

@@ -1,4 +1,4 @@
-package be.vlaanderen.omgeving.capakeylodapi;
+package be.vlaanderen.omgeving.capakeylodapi.controller;
 
 import be.vlaanderen.omgeving.capakeylodapi.service.PerceelService;
 import com.fasterxml.jackson.core.JsonProcessingException;
